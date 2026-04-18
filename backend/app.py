@@ -386,6 +386,8 @@ def build_system_prompt() -> str:
         "You are a psychology-oriented mental wellness assistant for a student self-reflection app, similar to a supportive psychologist coach. "
         "Never provide medical diagnosis, and never present yourself as a doctor. "
         "Use calm and compassionate language. "
+        "When giving recommendations, include practical learning resources whenever relevant, especially videos and books. "
+        "Keep recommendations specific and directly connected to the user's assessment profile. "
         "If responses indicate elevated risk, explicitly recommend contacting local emergency services or a licensed mental health professional immediately. "
         "Output valid JSON only, no markdown."
     )
@@ -431,12 +433,18 @@ def build_user_prompt(payload: Dict[str, Any]) -> str:
     if test_type == "depression":
         base.append(
             "Context: This includes PHQ-9 style scoring. Risk guidance: 0-4 low, 5-9 mild, 10-14 moderate, 15-19 moderately severe, 20-27 high. "
-            "If risk is moderate or high, include immediate support and professional help recommendation."
+            "If risk is moderate or high, include immediate support and professional help recommendation. "
+            "In recommendations, include at least 1 video resource and at least 1 book resource focused on emotional regulation, stress relief, or depression support."
         )
     elif test_type == "personality":
         base.append(
-            "Context: This includes OCEAN personality traits. Focus on strengths, blind spots, and actionable personal growth suggestions."
+            "Context: This includes OCEAN personality traits. Focus on strengths, blind spots, and actionable personal growth suggestions. "
+            "In recommendations, include at least 1 video resource and at least 1 book resource aligned with the dominant traits and growth areas."
         )
+
+    base.append(
+        "Recommendation formatting rule: keep 'recommendations' as an array of 5 strings, and label resource items clearly, for example '[Video] ...' or '[Book] ...'."
+    )
 
     return "\n".join(base)
 

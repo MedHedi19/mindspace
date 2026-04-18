@@ -1,5 +1,6 @@
 import { Camera, ClipboardList, Activity, Leaf, ArrowRight, Heart, Shield, Sparkles, ScanFace, Trees, MessageCircleHeart, BarChart3 } from 'lucide-react';
 import { Page } from '../types';
+import { motion } from 'framer-motion';
 
 interface HomeProps {
   onNavigate: (page: Page) => void;
@@ -8,23 +9,23 @@ interface HomeProps {
 const features = [
   {
     id: 'facial' as Page,
-    icon: <ScanFace size={28} />,
+    icon: <ScanFace size={34} />,
     title: 'Facial Emotion Analysis',
     description: 'Capture your current emotional snapshot through real-time facial expression signals and get an immediate breakdown.',
-    color: 'from-sky-500 to-cyan-500',
+    color: 'from-fuchsia-500 to-purple-600',
     chip: 'AI Vision',
   },
   {
     id: 'personality' as Page,
-    icon: <ClipboardList size={28} />,
+    icon: <ClipboardList size={34} />,
     title: 'Personality Quick Test',
     description: 'Run a concise OCEAN-based profile to understand behavior patterns, strengths, and emotional tendencies.',
-    color: 'from-amber-500 to-orange-500',
+    color: 'from-amber-400 to-orange-500',
     chip: 'OCEAN',
   },
   {
     id: 'depression' as Page,
-    icon: <Activity size={28} />,
+    icon: <Activity size={34} />,
     title: 'Depression Level Assessment',
     description: 'Use a PHQ-9 style flow to check your current depression risk level and receive practical, supportive next steps.',
     color: 'from-rose-500 to-pink-500',
@@ -32,153 +33,200 @@ const features = [
   },
   {
     id: 'greenspaces' as Page,
-    icon: <Trees size={28} />,
+    icon: <Trees size={34} />,
     title: 'Monastir Green Spaces',
     description: 'Access real places in Monastir and live nearby discovery to reset stress, calm anxiety, and restore focus outdoors.',
-    color: 'from-emerald-500 to-teal-500',
+    color: 'from-emerald-400 to-teal-500',
     chip: 'Real Places',
   },
 ];
 
 const stats = [
-  { value: '4', label: 'mental wellness modules connected in one flow' },
-  { value: '10', label: 'question quick personality format for better completion' },
-  { value: '24/7', label: 'safe-space chat availability for emotional support' },
+  { value: '4', label: 'Mental wellness modules connected in one flow' },
+  { value: '10', label: 'Question quick personality format for better completion' },
+  { value: '24/7', label: 'Safe-space chat availability for emotional support' },
 ];
 
 export default function Home({ onNavigate }: HomeProps) {
   return (
-    <div className="page-shell">
-      <section className="pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 bg-white/90 border border-emerald-200 text-emerald-700 px-4 py-1.5 rounded-full text-sm font-medium mb-6 shadow-sm">
-              <Heart size={14} />
-              AI-driven care + emotional safety
-            </div>
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 leading-[1.05] mb-6">
+    <div className="page-shell overflow-hidden">
+      <section className="pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+          >
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="inline-flex items-center gap-2 bg-white/90 border border-fuchsia-200 text-fuchsia-700 px-4 py-1.5 rounded-full text-sm font-bold mb-8 shadow-md"
+            >
+              <Sparkles size={16} className="text-fuchsia-500" />
+              Dynamic AI-Driven Care
+            </motion.div>
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold text-slate-900 leading-[1.1] mb-6 tracking-tight">
               Mental Health,
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 mt-1">Designed Like a Real Product</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-fuchsia-500 to-pink-500 mt-2">Redesigned</span>
             </h1>
-            <p className="text-lg text-slate-600 leading-relaxed mb-10 max-w-2xl">
-              MindSpace combines screening tools, facial emotion signals, safe AI conversation, and Monastir-based nature recommendations in one intentional experience.
+            <p className="text-xl text-slate-600 leading-relaxed mb-10 max-w-2xl font-medium">
+              MindSpace connects intelligent screening, dynamic visual analysis, and holistic real-world recovery into a seamless, beautiful experience. 
             </p>
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <button
+            <div className="flex flex-col sm:flex-row items-center gap-5">
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => onNavigate('facial')}
-                className="brand-button"
+                className="brand-button w-full sm:w-auto text-lg px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 to-fuchsia-600 shadow-xl shadow-purple-500/30"
               >
-                Start Emotional Scan
-                <ArrowRight size={18} />
-              </button>
-              <button
+                Scan Emotions
+                <ArrowRight size={22} className="ml-2" />
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => onNavigate('chatbot')}
-                className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 px-6 py-3 rounded-xl font-semibold border border-slate-200 transition-all duration-200"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-800 px-8 py-4 rounded-2xl font-bold border-2 border-slate-100 shadow-lg shadow-slate-200/50 transition-all"
               >
-                <MessageCircleHeart size={17} className="text-teal-600" />
-                Open Safe Chat
-              </button>
+                <MessageCircleHeart size={22} className="text-pink-500" />
+                Safe AI Chat
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="glass-panel rounded-3xl p-6 sm:p-7 border-emerald-100/80">
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-bold text-slate-900">Live Journey Map</h3>
-              <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-md">Guided</span>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8, rotate: 5 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 0.8, type: "spring", bounce: 0.5, delay: 0.2 }}
+            className="glass-panel rounded-[2rem] p-8 border-white/50 shadow-2xl relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-fuchsia-300/20 to-purple-300/20 blur-3xl -z-10 rounded-full" />
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-xl font-extrabold text-slate-900">Your Journey</h3>
+              <motion.span 
+                animate={{ y: [0, -5, 0] }}
+                transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                className="text-xs font-black uppercase tracking-wider text-fuchsia-700 bg-fuchsia-100 border border-fuchsia-200 px-3 py-1.5 rounded-xl"
+              >
+                Live
+              </motion.span>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {[
-                { label: '1. Quick check-in', icon: <Camera size={16} className="text-sky-600" /> },
-                { label: '2. Personality pattern', icon: <ClipboardList size={16} className="text-amber-600" /> },
-                { label: '3. Mood risk screening', icon: <Activity size={16} className="text-rose-600" /> },
-                { label: '4. Green-space reset', icon: <Leaf size={16} className="text-emerald-600" /> },
-              ].map((item) => (
-                <div key={item.label} className="flex items-center gap-3 rounded-xl border border-slate-100 bg-white px-3 py-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center">{item.icon}</div>
-                  <p className="text-sm font-semibold text-slate-700">{item.label}</p>
-                </div>
+                { label: 'Emotion Snapshot', icon: <Camera size={20} className="text-purple-600" /> },
+                { label: 'Core Personality', icon: <ClipboardList size={20} className="text-amber-500" /> },
+                { label: 'Wellbeing Risks', icon: <Activity size={20} className="text-rose-500" /> },
+                { label: 'Nature Reset', icon: <Leaf size={20} className="text-emerald-500" /> },
+              ].map((item, idx) => (
+                <motion.div 
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 + idx * 0.1 }}
+                  whileHover={{ scale: 1.03, x: 5 }}
+                  key={item.label} 
+                  className="flex items-center gap-4 rounded-2xl border-2 border-white/60 bg-white/40 backdrop-blur-md px-4 py-3 cursor-pointer"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center">{item.icon}</div>
+                  <p className="text-base font-bold text-slate-700">{item.label}</p>
+                </motion.div>
               ))}
             </div>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => onNavigate('student')}
-              className="w-full mt-5 inline-flex items-center justify-center gap-2 rounded-xl border border-sky-200 bg-sky-50 text-sky-700 py-2.5 text-sm font-semibold hover:bg-sky-100 transition-colors"
+              className="w-full mt-8 inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 text-white py-4 text-base font-bold shadow-xl shadow-slate-900/20"
             >
-              <BarChart3 size={16} />
-              Open Student Progress Panel
-            </button>
-          </div>
+              <BarChart3 size={20} />
+              View Dashboard
+            </motion.button>
+          </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-14 max-w-4xl">
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, type: "spring" }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-20 max-w-5xl"
+        >
           {stats.map((stat, i) => (
-            <div key={i} className="glass-panel rounded-2xl p-5 border border-slate-100">
-              <div className="text-3xl font-bold text-slate-900 mb-1">{stat.value}</div>
-              <div className="text-sm text-slate-500 leading-snug">{stat.label}</div>
-            </div>
+            <motion.div 
+              whileHover={{ y: -10, rotate: i % 2 === 0 ? 2 : -2 }}
+              key={i} 
+              className="glass-panel rounded-3xl p-8 border-2 border-white/50 text-center"
+            >
+              <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-800 to-slate-500 mb-3">{stat.value}</div>
+              <div className="text-base font-semibold text-slate-500 leading-snug px-4">{stat.label}</div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
-      <section className="pb-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
-        <div className="mb-8 flex items-center justify-between gap-4 flex-wrap">
-          <div>
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">Core Modules</h2>
-            <p className="text-slate-600 max-w-2xl">Choose where to start based on how you feel today. Every module feeds a broader wellbeing picture.</p>
-          </div>
-          <div className="inline-flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-500">
-            <Sparkles size={14} />
-            Intentional UX, not generic cards
-          </div>
+      <section className="pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+        <div className="mb-12 text-center max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">Explore Modules</h2>
+          <p className="text-lg text-slate-600 font-medium">Interact with our dynamic tools designed for modern mental wellness tracking.</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {features.map((feature) => (
-            <button
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {features.map((feature, idx) => (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: idx * 0.1, type: "spring", bounce: 0.4 }}
+              whileHover={{ scale: 1.03, y: -5 }}
+              whileTap={{ scale: 0.97 }}
               key={feature.id}
               onClick={() => onNavigate(feature.id)}
-              className="group text-left glass-panel rounded-2xl p-6 border border-slate-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+              className="group text-left glass-panel rounded-[2rem] p-8 border-2 border-white/60 hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 relative overflow-hidden"
             >
-              <div className="flex items-start justify-between mb-5">
-                <div className={`p-3 rounded-xl text-white bg-gradient-to-br ${feature.color} shadow-sm`}>
+              <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-5 transition-opacity duration-500 -z-10" />
+              <div className="flex items-start justify-between mb-8">
+                <motion.div 
+                  whileHover={{ rotate: 10, scale: 1.1 }}
+                  className={`p-4 rounded-2xl text-white bg-gradient-to-br ${feature.color} shadow-lg shadow-current`}
+                >
                   {feature.icon}
-                </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                </motion.div>
+                <span className="text-sm font-bold px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
                   {feature.chip}
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-700 transition-colors">
+              <h3 className="text-2xl font-black text-slate-900 mb-3 group-hover:text-purple-600 transition-colors">
                 {feature.title}
               </h3>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">{feature.description}</p>
-              <div className="flex items-center gap-1.5 text-sm font-medium text-emerald-700 group-hover:gap-2.5 transition-all">
-                Get Started <ArrowRight size={15} />
+              <p className="text-slate-500 text-base leading-relaxed mb-6 font-medium">{feature.description}</p>
+              <div className="flex items-center gap-2 text-base font-bold text-purple-600">
+                Launch Module <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}><ArrowRight size={18} /></motion.div>
               </div>
-            </button>
+            </motion.button>
           ))}
         </div>
       </section>
 
-      <section className="pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
-        <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-3xl p-10 sm:p-14 text-center text-white relative overflow-hidden shadow-xl shadow-emerald-100/40">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 left-8 w-32 h-32 rounded-full bg-white" />
-            <div className="absolute bottom-4 right-8 w-48 h-48 rounded-full bg-white" />
+      <section className="pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-slate-900 rounded-[3rem] p-12 sm:p-20 text-center text-white relative overflow-hidden shadow-2xl"
+        >
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-purple-500 to-transparent rounded-full blur-3xl mix-blend-screen" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-pink-500 to-transparent rounded-full blur-3xl mix-blend-screen" />
           </div>
-          <div className="relative">
-            <div className="flex justify-center gap-3 mb-6">
-              <Heart size={28} className="text-white/80" />
-              <Shield size={28} className="text-white/80" />
+          <div className="relative z-10">
+            <div className="flex justify-center gap-4 mb-8">
+              <motion.div whileHover={{ scale: 1.2, rotate: -10 }}><Heart size={40} className="text-pink-400" /></motion.div>
+              <motion.div whileHover={{ scale: 1.2, rotate: 10 }}><Shield size={40} className="text-purple-400" /></motion.div>
             </div>
-            <h2 className="text-3xl font-bold mb-4">Your data stays private</h2>
-            <p className="text-white/80 max-w-xl mx-auto text-base leading-relaxed">
-              All assessments are completely anonymous. No personal health data is stored without your consent. MindSpace is a self-reflection tool, not a clinical service.
-            </p>
-            <p className="text-white/60 text-sm mt-4">
-              If you are in crisis, please contact a mental health professional or call your local emergency services.
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-6">Safe, Secure & Private</h2>
+            <p className="text-slate-300 max-w-2xl mx-auto text-lg leading-relaxed font-medium">
+              We treat your data like our own. Completely anonymous screening. No unnecessary data storage. A purely reflective environment.
             </p>
           </div>
-        </div>
+        </motion.div>
       </section>
     </div>
   );

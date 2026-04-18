@@ -209,7 +209,7 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
           </div>
 
           <div className="glass-panel rounded-2xl p-6 border border-slate-100 mb-6">
-            <h3 className="font-bold text-slate-900 mb-3">AI Analysis (Ollama)</h3>
+            <h3 className="font-bold text-slate-900 mb-3">AI Analysis</h3>
 
             {isAnalyzing && <p className="text-sm text-slate-500">Analyzing your results...</p>}
 
@@ -242,15 +242,6 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
             )}
           </div>
 
-          {result.level.professional && (
-            <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 mb-6 flex items-start gap-3">
-              <AlertTriangle size={20} className="text-rose-600 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-rose-800 text-sm mb-1">Professional support recommended</p>
-                <p className="text-rose-700 text-xs leading-relaxed">This tool is not a clinical diagnosis. Please consult a qualified mental health professional for proper evaluation and treatment.</p>
-              </div>
-            </div>
-          )}
 
           <div className="flex gap-3">
             <button

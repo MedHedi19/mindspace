@@ -172,7 +172,7 @@ export default function PersonalityTest() {
           </div>
 
           <div className="glass-panel rounded-2xl p-6 border border-slate-100 mb-6">
-            <h3 className="font-bold text-slate-900 mb-3">AI Analysis (Ollama)</h3>
+            <h3 className="font-bold text-slate-900 mb-3">AI Analysis</h3>
 
             {isAnalyzing && <p className="text-sm text-slate-500">Analyzing your profile...</p>}
 

@@ -10,6 +10,8 @@ import StudentProgress from './pages/StudentProgress';
 import SafeChat from './pages/SafeChat';
 import Login from './pages/Login';
 import { fetchCurrentUser, loginWithId, logoutSession } from './services/authApi';
+import FloatingFloppyItems from './components/FloatingFloppyItems';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const AUTH_TOKEN_KEY = 'mindspace.authToken';
 
@@ -89,22 +91,48 @@ export default function App() {
 
   if (authLoading) {
     return (
-      <div className="page-shell flex items-center justify-center text-slate-600">
-        <div className="glass-panel rounded-2xl px-6 py-4 text-sm font-semibold">
-          Checking secure session...
+      <div className="font-sans antialiased relative overflow-x-hidden min-h-screen">
+        <FloatingFloppyItems />
+        <div className="page-shell flex items-center justify-center text-slate-600">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="glass-panel rounded-2xl px-8 py-5 text-sm font-bold shadow-xl shadow-purple-500/20 text-purple-700"
+          >
+            Checking secure session...
+          </motion.div>
         </div>
       </div>
     );
   }
 
   if (!authToken || !currentUserId) {
-    return <Login onLogin={handleLogin} loading={loginSubmitting} error={authError} />;
+    return (
+      <div className="font-sans antialiased relative overflow-x-hidden min-h-screen">
+        <FloatingFloppyItems />
+        <Login onLogin={handleLogin} loading={loginSubmitting} error={authError} />
+      </div>
+    );
   }
 
   return (
-    <div className="font-sans antialiased">
+    <div className="font-sans antialiased relative overflow-x-hidden min-h-screen">
+      <FloatingFloppyItems />
       <Navbar currentPage={currentPage} onNavigate={setCurrentPage} userId={currentUserId} onLogout={handleLogout} />
-      <main>{renderPage()}</main>
+      <main className="pt-8">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentPage}
+            initial={{ opacity: 0, y: 30, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            className="min-h-screen"
+          >
+            {renderPage()}
+          </motion.div>
+        </AnimatePresence>
+      </main>
     </div>
   );
 }
