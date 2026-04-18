@@ -1,4 +1,4 @@
-import { DepressionQuestion } from '../types';
+import type { DepressionQuestion } from '../types';
 
 export const depressionQuestions: DepressionQuestion[] = [
   { id: 1, text: "Little interest or pleasure in doing things you usually enjoy." },

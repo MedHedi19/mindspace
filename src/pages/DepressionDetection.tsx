@@ -117,7 +117,7 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
   const [aiAnalysis, setAiAnalysis] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
-  const [recordId, setRecordId] = useState<number | null>(null);
+
 
   const totalAnswered = Object.keys(answers).length;
   const allAnswered = totalAnswered === depressionQuestions.length;
@@ -149,7 +149,7 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
       });
 
       setAiAnalysis(response.analysis);
-      setRecordId(response.recordId ?? null);
+
     } catch (error) {
       setAiError(error instanceof Error ? error.message : 'Failed to generate AI analysis.');
     } finally {
@@ -164,7 +164,7 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
     setAiAnalysis(null);
     setAiError(null);
     setIsAnalyzing(false);
-    setRecordId(null);
+
   };
 
   if (result) {

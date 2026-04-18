@@ -1,5 +1,5 @@
 import { Camera, ClipboardList, Activity, Leaf, ArrowRight, Heart, Shield, Sparkles, ScanFace, Trees, MessageCircleHeart, BarChart3 } from 'lucide-react';
-import { Page } from '../types';
+import type { Page } from '../types';
 import { motion } from 'framer-motion';
 
 interface HomeProps {
