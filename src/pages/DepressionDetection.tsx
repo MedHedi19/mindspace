@@ -170,11 +170,11 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
   if (result) {
     const pct = Math.round((result.score / 27) * 100);
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-rose-50/20 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+      <div className="page-shell pt-24 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Assessment Results</h1>
-            <p className="text-slate-500 text-sm">PHQ-9 Depression Screening — for informational purposes only</p>
+            <p className="text-slate-500 text-sm">PHQ-9 psychological Screening — for informational purposes only</p>
           </div>
 
           <div className={`rounded-2xl p-6 border bg-gradient-to-br mb-6 ${result.level.bgGradient}`}>
@@ -194,7 +194,7 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
             <p className="text-sm text-slate-700 leading-relaxed">{result.level.description}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm mb-6">
+          <div className="glass-panel rounded-2xl p-6 border border-slate-100 mb-6">
             <h3 className="font-bold text-slate-900 mb-4">Recommendations</h3>
             <ul className="space-y-3">
               {result.level.recommendations.map((rec, i) => (
@@ -208,7 +208,7 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
             </ul>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm mb-6">
+          <div className="glass-panel rounded-2xl p-6 border border-slate-100 mb-6">
             <h3 className="font-bold text-slate-900 mb-3">AI Analysis (Ollama)</h3>
 
             {isAnalyzing && <p className="text-sm text-slate-500">Analyzing your results...</p>}
@@ -274,16 +274,16 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-rose-50/20 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div className="page-shell pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 bg-rose-50 border border-rose-200 text-rose-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 bg-white/90 border border-rose-200 text-rose-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4 shadow-sm">
             <Activity size={14} />
-            PHQ-9 Depression Screening
+            PHQ-9 Psychological Screening
           </div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Depression Assessment</h1>
-          <p className="text-slate-500 mb-4">Over the last 2 weeks, how often have you been bothered by any of the following problems?</p>
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">Mood Screening Session</h1>
+          <p className="text-slate-600 mb-4">Over the last 2 weeks, how often have you been bothered by the following symptoms?</p>
+          <div className="glass-panel border border-amber-200 rounded-xl p-4 flex items-start gap-3">
             <Info size={18} className="text-amber-600 shrink-0 mt-0.5" />
             <p className="text-amber-800 text-sm leading-relaxed">
               This is a self-screening tool based on the validated PHQ-9 questionnaire. It is not a clinical diagnosis. Please consult a mental health professional if you have concerns.
@@ -291,7 +291,7 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-1.5 border border-slate-100 shadow-sm mb-6">
+        <div className="glass-panel rounded-2xl p-1.5 border border-slate-100 mb-6">
           <div className="flex items-center justify-between px-4 py-2 mb-2">
             <span className="text-sm font-medium text-slate-600">
               Question {currentQuestion + 1} of {depressionQuestions.length}
@@ -308,7 +308,7 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm mb-6">
+        <div className="glass-panel rounded-2xl p-6 border border-slate-100 mb-6">
           <p className="text-sm font-medium text-slate-800 mb-4 leading-relaxed">
             <span className="text-rose-500 font-bold mr-1.5">{currentQuestion + 1}.</span>
             {activeQuestion.text}

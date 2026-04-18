@@ -65,15 +65,15 @@ export default function StudentProgress() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-sky-50/40 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div className="page-shell pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 bg-sky-50 border border-sky-200 text-sky-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 bg-white/90 border border-sky-200 text-sky-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4 shadow-sm">
             <BarChart3 size={14} />
             Student Progress Section
           </div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-3">Student Exam & Absence Snapshot</h1>
-          <p className="text-slate-500 max-w-2xl">A dedicated section for marks, absences, and chart-style analytics. You can connect this data to AI recommendations later.</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-3">Student Performance Intelligence</h1>
+          <p className="text-slate-600 max-w-2xl">Track marks, attendance, trend patterns, and AI-generated study actions from one unified dashboard.</p>
           {isLoading && <p className="text-sky-700 text-sm mt-3">Loading student data...</p>}
           {error && <p className="text-rose-600 text-sm mt-3">{error}</p>}
 
@@ -89,17 +89,17 @@ export default function StudentProgress() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-          <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+          <div className="glass-panel rounded-2xl p-5 border border-slate-100">
             <p className="text-xs uppercase tracking-wide text-slate-500 mb-2">Average Mark</p>
             <p className="text-3xl font-bold text-slate-900">{averageScore}/20</p>
             <p className="text-sm text-emerald-600 mt-2">Steady performance trend</p>
           </div>
-          <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+          <div className="glass-panel rounded-2xl p-5 border border-slate-100">
             <p className="text-xs uppercase tracking-wide text-slate-500 mb-2">Total Absences</p>
             <p className="text-3xl font-bold text-slate-900">{totalAbsences} days</p>
             <p className="text-sm text-amber-600 mt-2">Needs regular monitoring</p>
           </div>
-          <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+          <div className="glass-panel rounded-2xl p-5 border border-slate-100">
             <p className="text-xs uppercase tracking-wide text-slate-500 mb-2">Attendance Rate</p>
             <p className="text-3xl font-bold text-slate-900">{attendanceRate}%</p>
             <p className="text-sm text-sky-600 mt-2">School year estimate</p>
@@ -107,7 +107,7 @@ export default function StudentProgress() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+          <div className="glass-panel rounded-2xl p-6 border border-slate-100">
             <h2 className="text-lg font-bold text-slate-900 mb-4">Exam Marks by Subject</h2>
             <div className="space-y-4">
               {examMarks.map((mark) => {
@@ -130,7 +130,7 @@ export default function StudentProgress() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+          <div className="glass-panel rounded-2xl p-6 border border-slate-100">
             <h2 className="text-lg font-bold text-slate-900 mb-4">Absence Chart (Monthly)</h2>
             <div className="flex items-end gap-3 h-44">
               {absencesByMonth.map((item) => {
@@ -154,7 +154,7 @@ export default function StudentProgress() {
           </div>
         </div>
 
-        <div className="mt-6 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+        <div className="mt-6 glass-panel rounded-2xl p-6 border border-slate-100">
           <h2 className="text-lg font-bold text-slate-900 mb-4">Score Trend Chart</h2>
           <div className="flex items-end gap-2 h-32">
             {examTrend.map((value, index) => (
@@ -170,7 +170,7 @@ export default function StudentProgress() {
           <p className="text-xs text-slate-500 mt-3">Trend values are loaded from your backend database.</p>
         </div>
 
-        <div className="mt-6 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+        <div className="mt-6 glass-panel rounded-2xl p-6 border border-slate-100">
           <h2 className="text-lg font-bold text-slate-900 mb-3">AI Student Insights</h2>
           {!aiInsights && !isAnalyzing && !aiError && (
             <p className="text-sm text-slate-500">Click "Analyze Student Data with AI" to generate insights from current marks and absences.</p>

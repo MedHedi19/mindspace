@@ -131,14 +131,14 @@ export default function PersonalityTest() {
   if (result) {
     const dominant = (Object.entries(result) as [keyof PersonalityResult, number][]).reduce((a, b) => a[1] > b[1] ? a : b);
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50/20 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+      <div className="page-shell pt-24 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-white/90 border border-amber-200 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
               <ClipboardList size={32} className="text-amber-600" />
             </div>
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Your Personality Profile</h1>
-            <p className="text-slate-500">Based on the Big Five (OCEAN) personality model</p>
+            <p className="text-slate-600">Based on the Big Five (OCEAN) personality model</p>
           </div>
 
           <div className={`rounded-2xl p-5 border mb-6 ${traitInfo[dominant[0]].color}`}>
@@ -147,7 +147,7 @@ export default function PersonalityTest() {
             <p className="text-sm mt-1 opacity-80">{dominant[1] >= 60 ? traitInfo[dominant[0]].high : traitInfo[dominant[0]].low}</p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-5 mb-6">
+          <div className="glass-panel rounded-2xl p-6 border border-slate-100 space-y-5 mb-6">
             {(Object.entries(result) as [keyof PersonalityResult, number][]).map(([trait, score]) => {
               const info = traitInfo[trait];
               return (
@@ -171,7 +171,7 @@ export default function PersonalityTest() {
             })}
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm mb-6">
+          <div className="glass-panel rounded-2xl p-6 border border-slate-100 mb-6">
             <h3 className="font-bold text-slate-900 mb-3">AI Analysis (Ollama)</h3>
 
             {isAnalyzing && <p className="text-sm text-slate-500">Analyzing your profile...</p>}
@@ -218,18 +218,18 @@ export default function PersonalityTest() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50/20 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div className="page-shell pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 bg-white/90 border border-amber-200 text-amber-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4 shadow-sm">
             <ClipboardList size={14} />
-            OCEAN Personality Test
+            OCEAN Quick Test
           </div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Personality Assessment</h1>
-          <p className="text-slate-500">Answer honestly — there are no right or wrong answers.</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">Personality Quick Assessment</h1>
+          <p className="text-slate-600">Only {personalityQuestions.length} questions. Answer honestly, quickly, and naturally.</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-1.5 border border-slate-100 shadow-sm mb-6">
+        <div className="glass-panel rounded-2xl p-1.5 border border-slate-100 mb-6">
           <div className="flex items-center justify-between px-4 py-2 mb-2">
             <span className="text-sm font-medium text-slate-600">
               Question {currentQuestion + 1} of {personalityQuestions.length}
@@ -247,7 +247,7 @@ export default function PersonalityTest() {
         </div>
 
         <div className="mb-6">
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+          <div className="glass-panel rounded-2xl p-6 border border-slate-100">
             <p className="font-medium text-slate-800 mb-4 leading-relaxed">
               <span className="text-amber-500 font-bold mr-2">{currentQuestion + 1}.</span>
               {activeQuestion.text}
@@ -265,7 +265,7 @@ export default function PersonalityTest() {
                   }`}
                 >
                   <span className="font-bold text-sm">{s.value}</span>
-                  <span className="text-[9px] leading-tight text-center hidden sm:block opacity-70">{s.label.split(' ')[0]}</span>
+                  <span className="text-[9px] leading-tight text-center hidden sm:block opacity-70">{s.label}</span>
                 </button>
               ))}
             </div>

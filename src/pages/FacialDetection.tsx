@@ -117,15 +117,15 @@ export default function FacialDetection() {
   const advice = dominantEmotion ? moodAdvice[dominantEmotion.label] : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-sky-50/30 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div className="page-shell pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 bg-sky-50 border border-sky-200 text-sky-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 bg-white/90 border border-sky-200 text-sky-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4 shadow-sm">
             <Camera size={14} />
-            AI Facial Analysis
+            Live AI Facial Analysis
           </div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-3">Emotion Detection</h1>
-          <p className="text-slate-500 max-w-xl">Activate your camera to run real facial emotion analysis from a live captured frame.</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-3">Emotion Detection Studio</h1>
+          <p className="text-slate-600 max-w-xl">Run real-time emotion detection from your camera and get an expressive breakdown with practical emotional support tips.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -206,7 +206,7 @@ export default function FacialDetection() {
           <div className="space-y-5">
             {emotions ? (
               <>
-                <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+                <div className="glass-panel rounded-2xl p-6 border border-slate-100 space-y-1">
                   <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-4">Emotion Breakdown</h3>
                   <div className="space-y-3">
                     {emotions.map((emotion) => (
@@ -238,7 +238,7 @@ export default function FacialDetection() {
                 )}
               </>
             ) : (
-              <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm flex flex-col items-center justify-center text-center h-full min-h-60">
+              <div className="glass-panel rounded-2xl p-8 border border-slate-100 flex flex-col items-center justify-center text-center h-full min-h-60">
                 <div className="w-16 h-16 bg-sky-50 rounded-2xl flex items-center justify-center mb-4">
                   <Camera size={32} className="text-sky-500" />
                 </div>

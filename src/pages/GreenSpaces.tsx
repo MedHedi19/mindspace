@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Leaf, MapPin, Star, Filter, TreePine, Flower2, Mountain, Sprout, Trees, Building2, LocateFixed, Loader2 } from 'lucide-react';
-import { greenSpaces } from '../data/greenSpaces';
+import { monastirGreenSpaces } from '../data/monastirGreenSpaces';
 import type { GreenSpace } from '../types';
 
 interface OverpassElement {
@@ -309,7 +309,7 @@ export default function GreenSpaces() {
   const [lastSource, setLastSource] = useState<string | null>(null);
   const hasLiveResults = Array.isArray(dynamicSpaces) && dynamicSpaces.length > 0;
 
-  const sourceSpaces: GreenSpace[] = hasLiveResults ? dynamicSpaces : greenSpaces;
+  const sourceSpaces: GreenSpace[] = hasLiveResults ? dynamicSpaces : monastirGreenSpaces;
 
   const filters = useMemo<string[]>(
     () => ['All', ...Array.from(new Set(sourceSpaces.map((space: GreenSpace) => space.type)))],
@@ -322,7 +322,7 @@ export default function GreenSpaces() {
     return typeMatch && moodMatch;
   });
 
-  const nearestRealPlace = hasLiveResults && sourceSpaces.length > 0 ? sourceSpaces[0] : null;
+  const nearestRealPlace = sourceSpaces.length > 0 ? sourceSpaces[0] : null;
 
   const useMyLocation = async () => {
     if (!navigator.geolocation) {
@@ -368,15 +368,15 @@ export default function GreenSpaces() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50/30 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div className="page-shell pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 bg-white/90 border border-emerald-200 text-emerald-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4 shadow-sm">
             <Leaf size={14} />
             Nature Therapy
           </div>
           <h1 className="text-4xl font-bold text-slate-900 mb-3">Green Space Recommendations</h1>
-          <p className="text-slate-500 max-w-xl">Discover healing natural environments near you, curated to support your mental and emotional wellbeing.</p>
+          <p className="text-slate-600 max-w-xl">Discover real green places in Monastir for walking, calming anxiety, and restoring focus. You can also switch to live nearby search from your exact location.</p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <button
@@ -397,12 +397,12 @@ export default function GreenSpaces() {
                 }}
                 className="inline-flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
               >
-                Show demo list
+                Show Monastir list
               </button>
             )}
 
             <span className={`text-xs font-semibold px-3 py-1 rounded-full border ${hasLiveResults ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-50 text-slate-600 border-slate-200'}`}>
-              {hasLiveResults ? 'Live nearby results' : 'Demo results'}
+              {hasLiveResults ? 'Live nearby results' : 'Monastir curated real places'}
             </span>
           </div>
 
@@ -416,13 +416,13 @@ export default function GreenSpaces() {
                 Location used: {userLocation.lat.toFixed(5)}, {userLocation.lng.toFixed(5)}
               </p>
               <p>
-                Data source: {lastSource ?? (hasLiveResults ? 'OpenStreetMap live' : 'Demo dataset')}
+                Data source: {lastSource ?? (hasLiveResults ? 'OpenStreetMap live' : 'Monastir curated dataset')}
               </p>
             </div>
           )}
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm mb-8">
+        <div className="glass-panel rounded-2xl p-5 border border-slate-100 mb-8">
           <div className="flex items-center gap-2 mb-4 text-slate-700 font-semibold text-sm">
             <Filter size={16} />
             How are you feeling today?
@@ -482,7 +482,7 @@ export default function GreenSpaces() {
         )}
 
         {filtered.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl border border-slate-100">
+          <div className="text-center py-20 glass-panel rounded-2xl border border-slate-100">
             <Leaf size={40} className="mx-auto mb-4 text-slate-300" />
             <p className="text-slate-500 font-medium">No spaces match your current filters.</p>
             <button

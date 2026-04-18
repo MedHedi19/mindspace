@@ -1,7 +1,10 @@
 import base64
+import hashlib
 import json
 import logging
 import os
+import re
+import secrets
 import time
 from io import BytesIO
 from typing import Any, Dict, Optional, Tuple
@@ -14,6 +17,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from PIL import Image
+from werkzeug.security import check_password_hash, generate_password_hash
 
 try:
     from fer import FER
@@ -46,8 +50,12 @@ DB_USER = os.getenv("DB_USER", "root")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 DB_NAME = os.getenv("DB_NAME", "mindspace")
 CHAT_MEMORY_TURNS = int(os.getenv("CHAT_MEMORY_TURNS", "8"))
+AUTH_DEFAULT_USER_ID = os.getenv("AUTH_DEFAULT_USER_ID", "254JMT3946").upper()
+AUTH_DEFAULT_PASSWORD = os.getenv("AUTH_DEFAULT_PASSWORD", "mindspace123")
+AUTH_SESSION_HOURS = int(os.getenv("AUTH_SESSION_HOURS", "72"))
 
 CHAT_SESSIONS: Dict[str, list] = {}
+USER_ID_PATTERN = re.compile(r"^[A-Z0-9]{8,16}$")
 FACIAL_LABEL_COLORS = {
     "Happy": "bg-yellow-400",
     "Neutral": "bg-slate-400",
@@ -80,6 +88,31 @@ def initialize_database() -> None:
 
     conn = mysql_connection(include_database=True)
     cursor = conn.cursor()
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS app_users (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            user_id VARCHAR(24) NOT NULL UNIQUE,
+            password_hash VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """
+    )
+
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS auth_sessions (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            user_id VARCHAR(24) NOT NULL,
+            token_hash CHAR(64) NOT NULL UNIQUE,
+            expires_at DATETIME NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_auth_sessions_user_id (user_id),
+            INDEX idx_auth_sessions_expires_at (expires_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """
+    )
+
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS assessment_runs (
@@ -170,8 +203,118 @@ def initialize_database() -> None:
             ],
         )
 
+    cursor.execute("SELECT COUNT(*) FROM app_users WHERE user_id = %s", (AUTH_DEFAULT_USER_ID,))
+    if cursor.fetchone()[0] == 0:
+        cursor.execute(
+            "INSERT INTO app_users (user_id, password_hash) VALUES (%s, %s)",
+            (AUTH_DEFAULT_USER_ID, generate_password_hash(AUTH_DEFAULT_PASSWORD)),
+        )
+        app.logger.info("[auth] seeded default app user id=%s", AUTH_DEFAULT_USER_ID)
+
     cursor.close()
     conn.close()
+
+
+def hash_auth_token(token: str) -> str:
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
+def extract_bearer_token() -> Optional[str]:
+    auth_header = str(request.headers.get("Authorization", "")).strip()
+    if not auth_header.lower().startswith("bearer "):
+        return None
+    token = auth_header[7:].strip()
+    return token or None
+
+
+def is_valid_user_id(user_id: str) -> bool:
+    return bool(USER_ID_PATTERN.fullmatch(user_id))
+
+
+def create_auth_session_token(user_id: str) -> Tuple[Optional[str], Optional[str]]:
+    try:
+        conn = mysql_connection(include_database=True)
+    except mysql.connector.Error as exc:
+        return None, f"Database connection failed: {exc}"
+
+    token = secrets.token_urlsafe(32)
+    token_hash = hash_auth_token(token)
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO auth_sessions (user_id, token_hash, expires_at)
+            VALUES (%s, %s, DATE_ADD(NOW(), INTERVAL %s HOUR))
+            """,
+            (user_id, token_hash, AUTH_SESSION_HOURS),
+        )
+        cursor.close()
+        conn.close()
+        return token, None
+    except mysql.connector.Error as exc:
+        conn.close()
+        return None, f"Failed to create session: {exc}"
+
+
+def find_user_by_session_token(token: str) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
+    try:
+        conn = mysql_connection(include_database=True)
+    except mysql.connector.Error as exc:
+        return None, f"Database connection failed: {exc}"
+
+    token_hash = hash_auth_token(token)
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(
+            """
+            SELECT user_id, expires_at
+            FROM auth_sessions
+            WHERE token_hash = %s
+            LIMIT 1
+            """,
+            (token_hash,),
+        )
+        row = cursor.fetchone()
+        if not row:
+            cursor.close()
+            conn.close()
+            return None, None
+
+        cursor.execute("DELETE FROM auth_sessions WHERE expires_at < NOW()")
+
+        cursor.close()
+        conn.close()
+
+        expires_at = row.get("expires_at")
+        if expires_at is None:
+            return None, None
+
+        if hasattr(expires_at, "timestamp") and expires_at.timestamp() < time.time():
+            return None, None
+
+        return {"userId": row.get("user_id")}, None
+    except mysql.connector.Error as exc:
+        conn.close()
+        return None, f"Failed to validate session token: {exc}"
+
+
+def delete_auth_session(token: str) -> Optional[str]:
+    try:
+        conn = mysql_connection(include_database=True)
+    except mysql.connector.Error as exc:
+        return f"Database connection failed: {exc}"
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM auth_sessions WHERE token_hash = %s", (hash_auth_token(token),))
+        cursor.close()
+        conn.close()
+        return None
+    except mysql.connector.Error as exc:
+        conn.close()
+        return f"Failed to delete session: {exc}"
 
 
 def fetch_student_progress() -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
@@ -652,6 +795,83 @@ def models() -> Any:
         return jsonify({"error": "Failed to fetch models", "details": response.text}), 502
 
     return jsonify(response.json())
+
+
+@app.post("/api/auth/login")
+def auth_login() -> Any:
+    payload = request.get_json(silent=True) or {}
+    if not isinstance(payload, dict):
+        return jsonify({"error": "Invalid JSON payload"}), 400
+
+    user_id = str(payload.get("userId", "")).strip().upper()
+    password = str(payload.get("password", ""))
+
+    if not user_id or not password:
+        return jsonify({"error": "userId and password are required"}), 400
+
+    if not is_valid_user_id(user_id):
+        return jsonify({"error": "userId format is invalid. Use uppercase letters and numbers only (8-16 chars)."}), 400
+
+    try:
+        conn = mysql_connection(include_database=True)
+    except mysql.connector.Error as exc:
+        return jsonify({"error": f"Database connection failed: {exc}"}), 500
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT user_id, password_hash FROM app_users WHERE user_id = %s LIMIT 1", (user_id,))
+        user_row = cursor.fetchone()
+        cursor.close()
+        conn.close()
+    except mysql.connector.Error as exc:
+        conn.close()
+        return jsonify({"error": f"Failed to read user: {exc}"}), 500
+
+    if not user_row or not check_password_hash(str(user_row.get("password_hash", "")), password):
+        return jsonify({"error": "Invalid ID or password."}), 401
+
+    token, token_error = create_auth_session_token(user_id)
+    if token_error:
+        return jsonify({"error": token_error}), 500
+
+    return jsonify(
+        {
+            "ok": True,
+            "token": token,
+            "user": {
+                "userId": user_id,
+            },
+        }
+    )
+
+
+@app.get("/api/auth/me")
+def auth_me() -> Any:
+    token = extract_bearer_token()
+    if not token:
+        return jsonify({"error": "Missing bearer token."}), 401
+
+    user, error = find_user_by_session_token(token)
+    if error:
+        return jsonify({"error": error}), 500
+
+    if not user:
+        return jsonify({"error": "Session is invalid or expired."}), 401
+
+    return jsonify({"ok": True, "user": user})
+
+
+@app.post("/api/auth/logout")
+def auth_logout() -> Any:
+    token = extract_bearer_token()
+    if not token:
+        return jsonify({"error": "Missing bearer token."}), 401
+
+    error = delete_auth_session(token)
+    if error:
+        return jsonify({"error": error}), 500
+
+    return jsonify({"ok": True})
 
 
 @app.get("/api/student-progress")

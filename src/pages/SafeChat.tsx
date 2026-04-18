@@ -70,20 +70,20 @@ export default function SafeChat() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-teal-50/30 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div className="page-shell pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 bg-teal-50 border border-teal-200 text-teal-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 bg-white/90 border border-teal-200 text-teal-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4 shadow-sm">
             <HeartHandshake size={14} />
             Safe Space Chat
           </div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-3">Talk to AI Safe Chat</h1>
-          <p className="text-slate-500 max-w-3xl">
+          <h1 className="text-4xl font-bold text-slate-900 mb-3">Safe Space Conversation</h1>
+          <p className="text-slate-600 max-w-3xl">
             This space is private and judgment-free. If talking to people feels hard, you can start here and express your thoughts at your own pace.
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="glass-panel rounded-2xl border border-slate-100 overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-sm text-slate-600">
               <Shield size={16} className="text-teal-600" />

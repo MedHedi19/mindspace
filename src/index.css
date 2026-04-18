@@ -1,3 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+	:root {
+		--bg-soft: #f5f8f7;
+		--bg-ink: #101624;
+		--brand: #0f766e;
+		--brand-deep: #115e59;
+		--accent: #f59e0b;
+		--panel: rgba(255, 255, 255, 0.8);
+		--line: rgba(15, 23, 42, 0.08);
+	}
+
+	html,
+	body,
+	#root {
+		min-height: 100%;
+	}
+
+	body {
+		margin: 0;
+		font-family: 'Plus Jakarta Sans', sans-serif;
+		color: #1f2937;
+		background:
+			radial-gradient(circle at 8% 6%, rgba(20, 184, 166, 0.14), transparent 34%),
+			radial-gradient(circle at 92% 10%, rgba(14, 165, 233, 0.14), transparent 30%),
+			radial-gradient(circle at 74% 80%, rgba(249, 115, 22, 0.1), transparent 25%),
+			var(--bg-soft);
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: 'Sora', sans-serif;
+		letter-spacing: -0.02em;
+	}
+}
+
+@layer components {
+	.page-shell {
+		@apply min-h-screen relative;
+		background:
+			linear-gradient(140deg, rgba(255, 255, 255, 0.9), rgba(240, 253, 250, 0.8)),
+			radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.08), transparent 30%),
+			radial-gradient(circle at 80% 25%, rgba(59, 130, 246, 0.07), transparent 24%);
+	}
+
+	.page-shell::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image: linear-gradient(rgba(15, 23, 42, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, 0.02) 1px, transparent 1px);
+		background-size: 36px 36px;
+		pointer-events: none;
+	}
+
+	.glass-panel {
+		background: var(--panel);
+		border: 1px solid var(--line);
+		box-shadow: 0 18px 45px -30px rgba(15, 23, 42, 0.55);
+		-webkit-backdrop-filter: blur(10px);
+		backdrop-filter: blur(10px);
+	}
+
+	.brand-button {
+		@apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300;
+		background: linear-gradient(140deg, var(--brand), var(--brand-deep));
+		box-shadow: 0 16px 28px -18px rgba(15, 118, 110, 0.9);
+	}
+
+	.brand-button:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 18px 30px -16px rgba(15, 118, 110, 0.95);
+	}
+}

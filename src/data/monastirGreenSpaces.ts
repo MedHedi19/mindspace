@@ -1,6 +1,6 @@
 import type { GreenSpace } from '../types';
 
-export const greenSpaces: GreenSpace[] = [
+export const monastirGreenSpaces: GreenSpace[] = [
   {
     id: 1,
     placeId: 'monastir-falaise-park',
