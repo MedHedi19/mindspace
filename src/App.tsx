@@ -7,6 +7,7 @@ import PersonalityTest from './pages/PersonalityTest';
 import DepressionDetection from './pages/DepressionDetection';
 import GreenSpaces from './pages/GreenSpaces';
 import StudentProgress from './pages/StudentProgress';
+import SafeChat from './pages/SafeChat';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -19,6 +20,7 @@ export default function App() {
       case 'depression': return <DepressionDetection onNavigate={setCurrentPage} />;
       case 'greenspaces': return <GreenSpaces />;
       case 'student': return <StudentProgress />;
+      case 'chatbot': return <SafeChat />;
     }
   };
 

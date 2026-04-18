@@ -1,4 +1,4 @@
-import { Brain, Camera, ClipboardList, Activity, Leaf, Menu, X, BarChart3 } from 'lucide-react';
+import { Brain, Camera, ClipboardList, Activity, Leaf, Menu, X, BarChart3, MessageCircleHeart } from 'lucide-react';
 import { useState } from 'react';
 import type { Page } from '../types';
 
@@ -14,6 +14,7 @@ const navItems: { id: Page; label: string; icon: React.ReactNode }[] = [
   { id: 'depression', label: 'Depression Test', icon: <Activity size={18} /> },
   { id: 'greenspaces', label: 'Green Spaces', icon: <Leaf size={18} /> },
   { id: 'student', label: 'Student Progress', icon: <BarChart3 size={18} /> },
+  { id: 'chatbot', label: 'Safe Place', icon: <MessageCircleHeart size={18} /> },
 ];
 
 export default function Navbar({ currentPage, onNavigate }: NavbarProps) {

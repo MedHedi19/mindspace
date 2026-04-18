@@ -1,4 +1,4 @@
-export type Page = 'home' | 'facial' | 'personality' | 'depression' | 'greenspaces' | 'student';
+export type Page = 'home' | 'facial' | 'personality' | 'depression' | 'greenspaces' | 'student' | 'chatbot';
 
 export interface Emotion {
   label: string;

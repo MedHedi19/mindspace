@@ -238,7 +238,6 @@ export default function DepressionDetection({ onNavigate }: DepressionDetectionP
                   </ul>
                 </div>
                 <p className="text-xs text-slate-500">{aiAnalysis.disclaimer}</p>
-                {recordId && <p className="text-xs text-emerald-700">Saved in database with record #{recordId}.</p>}
               </div>
             )}
           </div>

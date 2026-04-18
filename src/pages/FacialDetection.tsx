@@ -1,33 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { Camera, RefreshCw, AlertCircle, CheckCircle, Zap } from 'lucide-react';
-import { Emotion } from '../types';
-
-const emotionProfiles: Emotion[][] = [
-  [
-    { label: 'Happy', score: 78, color: 'bg-yellow-400' },
-    { label: 'Calm', score: 62, color: 'bg-teal-400' },
-    { label: 'Surprised', score: 14, color: 'bg-sky-400' },
-    { label: 'Neutral', score: 22, color: 'bg-slate-400' },
-    { label: 'Sad', score: 8, color: 'bg-blue-400' },
-    { label: 'Anxious', score: 5, color: 'bg-orange-400' },
-  ],
-  [
-    { label: 'Neutral', score: 65, color: 'bg-slate-400' },
-    { label: 'Calm', score: 50, color: 'bg-teal-400' },
-    { label: 'Thoughtful', score: 40, color: 'bg-violet-400' },
-    { label: 'Sad', score: 18, color: 'bg-blue-400' },
-    { label: 'Happy', score: 12, color: 'bg-yellow-400' },
-    { label: 'Anxious', score: 10, color: 'bg-orange-400' },
-  ],
-  [
-    { label: 'Anxious', score: 55, color: 'bg-orange-400' },
-    { label: 'Sad', score: 42, color: 'bg-blue-400' },
-    { label: 'Neutral', score: 30, color: 'bg-slate-400' },
-    { label: 'Angry', score: 20, color: 'bg-red-400' },
-    { label: 'Calm', score: 15, color: 'bg-teal-400' },
-    { label: 'Happy', score: 5, color: 'bg-yellow-400' },
-  ],
-];
+import type { Emotion } from '../types';
+import { analyzeFacialImage } from '../services/facialApi';
 
 const moodAdvice: Record<string, { message: string; tip: string; color: string }> = {
   Happy: { message: "You're radiating positive energy!", tip: "Channel this joy into something creative or share it with someone who needs a lift.", color: "text-yellow-600 bg-yellow-50 border-yellow-200" },
@@ -36,6 +10,7 @@ const moodAdvice: Record<string, { message: string; tip: string; color: string }
   Anxious: { message: "Some stress or worry detected.", tip: "Try a 4-7-8 breathing exercise: inhale 4 counts, hold 7, exhale 8.", color: "text-orange-600 bg-orange-50 border-orange-200" },
   Sad: { message: "You seem to be carrying some sadness.", tip: "Be gentle with yourself. Consider reaching out to a trusted friend or taking a walk outside.", color: "text-blue-600 bg-blue-50 border-blue-200" },
   Angry: { message: "Some tension or frustration detected.", tip: "Step away for 5 minutes and take deep slow breaths to calm your nervous system.", color: "text-red-600 bg-red-50 border-red-200" },
+  Disgust: { message: "You may be feeling discomfort right now.", tip: "Create a little distance from the trigger, then take a few slow breaths.", color: "text-lime-700 bg-lime-50 border-lime-200" },
   Thoughtful: { message: "You're in a reflective state.", tip: "Journaling right now could help you process your thoughts effectively.", color: "text-violet-600 bg-violet-50 border-violet-200" },
   Surprised: { message: "Something caught you off guard!", tip: "Embrace the unexpected — novelty and surprise can spark creativity.", color: "text-sky-600 bg-sky-50 border-sky-200" },
 };
@@ -81,21 +56,59 @@ export default function FacialDetection() {
   }, [stream]);
 
   const runAnalysis = () => {
+    if (!videoRef.current) {
+      setError('Camera preview is not ready. Please try again.');
+      return;
+    }
+
     setAnalyzing(true);
     setEmotions(null);
+    setError(null);
     setCountdown(3);
+
     let count = 3;
     const countInterval = setInterval(() => {
       count -= 1;
       setCountdown(count);
+
       if (count === 0) {
         clearInterval(countInterval);
         setCountdown(null);
-        setTimeout(() => {
-          const profile = emotionProfiles[Math.floor(Math.random() * emotionProfiles.length)];
-          setEmotions(profile);
+
+        const videoEl = videoRef.current;
+        if (!videoEl) {
           setAnalyzing(false);
-        }, 800);
+          setError('Camera preview is unavailable.');
+          return;
+        }
+
+        const width = videoEl.videoWidth || 640;
+        const height = videoEl.videoHeight || 480;
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          setAnalyzing(false);
+          setError('Could not capture camera frame.');
+          return;
+        }
+
+        ctx.drawImage(videoEl, 0, 0, width, height);
+        const imageBase64 = canvas.toDataURL('image/jpeg', 0.9);
+
+        analyzeFacialImage(imageBase64)
+          .then((response) => {
+            setEmotions(response.emotions);
+          })
+          .catch((err) => {
+            const message = err instanceof Error ? err.message : 'Real facial analysis failed.';
+            setError(message);
+          })
+          .finally(() => {
+            setAnalyzing(false);
+          });
       }
     }, 1000);
   };
@@ -112,7 +125,7 @@ export default function FacialDetection() {
             AI Facial Analysis
           </div>
           <h1 className="text-4xl font-bold text-slate-900 mb-3">Emotion Detection</h1>
-          <p className="text-slate-500 max-w-xl">Activate your camera to analyze your current emotional state through facial expression recognition.</p>
+          <p className="text-slate-500 max-w-xl">Activate your camera to run real facial emotion analysis from a live captured frame.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
